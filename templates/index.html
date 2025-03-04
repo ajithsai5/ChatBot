@@ -1,0 +1,22 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI ChatBot</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <h1>🤖 AI ChatBot</h1>
+    <div id="chatbox">
+        <div id="conversation"></div>
+        <div id="input-container">
+            <input type="text" id="userInput" placeholder="Type message..." autofocus>
+            <button onclick="sendMessage()">Send</button>
+            <button id="stopBtn" onclick="stopChat()">Stop</button>
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='scripts.js') }}"></script>
+</body>
+</html>
