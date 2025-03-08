@@ -2,6 +2,7 @@
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_community.embeddings import OllamaEmbeddings
 from langchain_community.vectorstores import Chroma
+from langchain_ollama import OllamaEmbeddings
 
 vector_store = None
 
