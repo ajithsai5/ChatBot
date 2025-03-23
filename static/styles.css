@@ -53,6 +53,12 @@ h1 {
     clear: both;
 }
 
+.user-message strong,
+.bot-message strong {
+    display: block;
+    margin-bottom: 5px;
+}
+
 #input-container {
     display: flex;
     gap: 10px;
@@ -87,4 +93,34 @@ button:hover {
 
 #stopBtn:hover {
     background: #c0392b;
+}
+
+.loading-screen {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    font-size: 24px;
+    color: #2c3e50;
+}
+
+#conversation {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.ai-message h1, .ai-message h2, .ai-message h3 {
+    color: #2c3e50;
+    margin: 15px 0;
+}
+
+.ai-message ul {
+    padding-left: 30px;
+    margin: 10px 0;
+}
+
+.ai-message a {
+    color: #3498db;
+    text-decoration: underline;
 }

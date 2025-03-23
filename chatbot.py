@@ -11,14 +11,21 @@ chat_bp = Blueprint('chat', __name__)
 model = OllamaLLM(model="llama3.2")
 
 PROMPT_TEMPLATE = """
-Use the following context to answer the question:
-{context}
+**You are a formatting expert** answering with rich Markdown. Use:
+# Headings
+- Bullet points
+**Bold text**
+*Italic text*
+[Links](https://example.com)
+Paragraph separations
 
-Conversation History:
-{history}
+Context: {context}
+History: {history}
 
 Question: {question}
-Answer:"""
+
+Answer:
+"""
 
 prompt = ChatPromptTemplate.from_template(PROMPT_TEMPLATE)
 chain = prompt | model
@@ -43,4 +50,8 @@ def handle_chat():
     
     # Update conversation context
     new_context = f"{context}\nUser: {user_input}\nAI: {response}"
-    return jsonify({"response": str(response), "context": new_context})
+    # Change the response return to preserve Markdown
+    return jsonify({
+    "response": response,  # Remove str() conversion
+    "context": new_context
+    })
