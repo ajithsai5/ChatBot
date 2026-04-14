@@ -35,5 +35,8 @@ Thumbs.db
 # Jupyter
 .ipynb_checkpoints/
 
-# BMad generated output
+# BMad framework (developer tooling, not project code)
+.claude/
+.github/
+_bmad/
 _bmad-output/
