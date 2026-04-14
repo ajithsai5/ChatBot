@@ -34,3 +34,6 @@ Thumbs.db
 
 # Jupyter
 .ipynb_checkpoints/
+
+# BMad generated output
+_bmad-output/
