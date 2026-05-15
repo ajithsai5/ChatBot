@@ -1,37 +1,171 @@
-<!-- index.html -->
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="auto">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ title }}</title>
-    <link rel="stylesheet" href="/uhccp-internal-chatbot/static/styles.css">
-    <script type="module">
-        import { marked } from 'https://cdn.jsdelivr.net/npm/marked/lib/marked.esm.js';
-        window.marked = marked;
-    </script>
-    <script src="https://cdn.jsdelivr.net/npm/dompurify@3.0.6/dist/purify.min.js"></script>
-    
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>{{ title }}</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600;8..60,700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<script type="module">
+  import { marked } from 'https://cdn.jsdelivr.net/npm/marked/lib/marked.esm.js';
+  window.marked = marked;
+</script>
+<script src="https://cdn.jsdelivr.net/npm/dompurify@3.0.6/dist/purify.min.js"></script>
+<link rel="stylesheet" href="/uhccp-internal-chatbot/static/styles.css" />
 </head>
 <body>
-    <main class="app-shell" aria-label="UHCCP internal chatbot interface">
-        <header class="app-header">
-            <h1 class="app-title">UHCCP Ask Isaac</h1>
-            <p class="app-subtitle">AI assistant for UHCCP DevOps knowledge and support</p>
-        </header>
 
-        <section class="chatbox" aria-label="Chat workspace">
-            <div id="conversation" class="message conversation" aria-live="polite"></div>
-            <form id="chat-form" class="chat-form" aria-label="Chat input form">
-                <label for="userInput" class="sr-only">Message</label>
-                <textarea id="userInput" class="chat-input" placeholder="Type a message..." rows="1" autofocus></textarea>
-                <button id="sendBtn" class="send-button" type="submit">Send</button>
-            </form>
-            <aside id="warning" class="warning" aria-label="AI reliability notice">
-                <p>Answers have been generated using an artificial intelligence (AI) interface. The AI output may not always be error-free and could include incomplete or inaccurate information.</p>
-            </aside>
-        </section>
-    </main>
-    <script src="/uhccp-internal-chatbot/static/scripts.js"></script>
+<div class="app app-shell" id="app">
+
+  <!-- ── Sidebar ───────────────────────────────────────── -->
+  <aside class="sidebar" aria-label="Conversation history and quick actions">
+    <div class="brand">
+      <div class="brand-mark" aria-hidden="true">i</div>
+      <div>
+        <div class="brand-name">Ask Isaac</div>
+        <div class="brand-sub">UHCCP DevOps</div>
+      </div>
+    </div>
+
+    <button class="new-chat" id="newChatBtn" type="button">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
+      New conversation
+    </button>
+
+    <nav class="history" aria-label="Conversation history">
+      <div class="history-day">Today</div>
+      <ul class="history-list" id="historyList">
+        <li><button class="history-item is-active" type="button">Open Dynatrace problems for Eagle</button></li>
+        <li><button class="history-item" type="button">Generate weekly status PPT</button></li>
+        <li><button class="history-item" type="button">Splunk errors — payment service</button></li>
+      </ul>
+      <div class="history-day">Yesterday</div>
+      <ul class="history-list">
+        <li><button class="history-item" type="button">CrUX metrics for member portal</button></li>
+        <li><button class="history-item" type="button">ServiceNow change CHG0042189 status</button></li>
+        <li><button class="history-item" type="button">Link validator — provider directory</button></li>
+      </ul>
+      <div class="history-day">May 12</div>
+      <ul class="history-list">
+        <li><button class="history-item" type="button">Rally user stories — team Falcon</button></li>
+        <li><button class="history-item" type="button">P1 incident retro draft</button></li>
+      </ul>
+    </nav>
+
+    <div class="quick">
+      <div class="side-label">Quick actions</div>
+      <div class="quick-grid">
+        <button class="quick-chip" data-prompt="Show open Rally user stories for the current sprint" type="button"><span class="dot"></span><span>Rally</span></button>
+        <button class="quick-chip" data-prompt="List open ServiceNow P1 and P2 incidents" type="button"><span class="dot"></span><span>ServiceNow</span></button>
+        <button class="quick-chip" data-prompt="Show recent Splunk error patterns" type="button"><span class="dot"></span><span>Splunk</span></button>
+        <button class="quick-chip" data-prompt="Show current Dynatrace problems" type="button"><span class="dot"></span><span>Dynatrace</span></button>
+        <button class="quick-chip" data-prompt="Show CrUX performance metrics for member portal" type="button"><span class="dot"></span><span>CrUX</span></button>
+        <button class="quick-chip" data-prompt="Run web link validator on provider directory" type="button"><span class="dot"></span><span>Link validator</span></button>
+      </div>
+    </div>
+
+    <div class="side-foot">
+      <div class="avatar" aria-hidden="true">AS</div>
+      <div class="user-info">
+        <strong>Ajith Sai</strong>
+        <span>UHCCP DevOps</span>
+      </div>
+      <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle theme" title="Toggle theme">
+        <svg class="moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        <svg class="sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      </button>
+    </div>
+  </aside>
+
+  <!-- ── Main ──────────────────────────────────────────── -->
+  <main class="main">
+
+    <div class="topbar">
+      <button class="sidebar-toggle" id="sidebarToggle" type="button" aria-label="Open menu">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+      </button>
+      <div class="topbar-title">
+        <span class="pulse" aria-hidden="true"></span>
+        UHCCP Ask Isaac
+      </div>
+
+      <div class="topbar-spacer"></div>
+
+      <a class="topbar-link" href="#" aria-label="Other UHCCP AI tools">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+        UHCCP AI tools
+      </a>
+      <button class="topbar-icon-btn" aria-label="Help" title="Help" type="button">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 1 1 3.5 2.3c-.8.4-1 1-1 1.7M12 17h.01"/></svg>
+      </button>
+    </div>
+
+    <div class="conv-wrap" id="convWrap">
+      <div class="conv-inner" id="conversation" aria-live="polite">
+        <!-- Empty state (replaced once user sends first message) -->
+        <div class="empty" id="emptyState">
+          <div class="empty-mark" aria-hidden="true">i</div>
+          <h2 class="empty-greet">Hello Ajith, <em>how can I help?</em></h2>
+          <p class="empty-sub">Ask about Rally artifacts, ServiceNow tickets, Splunk and Dynatrace signals, CrUX metrics, or generate a weekly status deck.</p>
+
+          <div class="prompts">
+            <button class="prompt-card" data-prompt="Show current Dynatrace problems for the member portal" type="button">
+              <span class="ptag">Dynatrace</span>
+              <span class="ptitle">Show open Dynatrace problems</span>
+            </button>
+            <button class="prompt-card" data-prompt="Generate the weekly status PPT for UHCCP DevOps" type="button">
+              <span class="ptag">PowerPoint</span>
+              <span class="ptitle">Generate weekly status deck</span>
+            </button>
+            <button class="prompt-card" data-prompt="Run the web link validator on the provider directory" type="button">
+              <span class="ptag">Link health</span>
+              <span class="ptitle">Run web link validator</span>
+            </button>
+            <button class="prompt-card" data-prompt="What user stories is team Eagle working on this sprint?" type="button">
+              <span class="ptag">Rally</span>
+              <span class="ptitle">What is team Eagle working on?</span>
+            </button>
+          </div>
+
+          <div class="empty-tip">
+            <span>Press</span><span class="kbd">Enter</span><span>to send,</span><span class="kbd">Shift + Enter</span><span>for a new line</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="composer-wrap">
+        <div class="composer-inner">
+          <form id="chat-form" class="composer" aria-label="Chat input">
+            <label for="userInput" class="sr-only">Message</label>
+            <textarea id="userInput" rows="1" placeholder="Ask Isaac anything about UHCCP DevOps…" autofocus></textarea>
+            <div class="composer-row">
+              <div class="left">
+                <button class="composer-tool" type="button" data-prompt="Generate the weekly status PPT for UHCCP DevOps">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6"/></svg>
+                  Weekly PPT
+                </button>
+                <button class="composer-tool" type="button" data-prompt="Run the web link validator">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.07 0l3-3a5 5 0 1 0-7.07-7.07L11 5"/><path d="M14 11a5 5 0 0 0-7.07 0l-3 3a5 5 0 1 0 7.07 7.07L13 19"/></svg>
+                  Link validator
+                </button>
+              </div>
+              <button class="send-btn" id="sendBtn" type="submit" aria-label="Send" disabled>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+              </button>
+            </div>
+          </form>
+          <p class="warning" id="warning" role="note">
+            <strong>Note:</strong> Answers are AI-generated and may include incomplete or inaccurate information. Verify critical details against source systems.
+          </p>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+</div>
+
+<script src="/uhccp-internal-chatbot/static/scripts.js"></script>
 </body>
 </html>
