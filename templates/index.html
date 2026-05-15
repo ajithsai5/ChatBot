@@ -1,0 +1,37 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title }}</title>
+    <link rel="stylesheet" href="/uhccp-internal-chatbot/static/styles.css">
+    <script type="module">
+        import { marked } from 'https://cdn.jsdelivr.net/npm/marked/lib/marked.esm.js';
+        window.marked = marked;
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/dompurify@3.0.6/dist/purify.min.js"></script>
+    
+</head>
+<body>
+    <main class="app-shell" aria-label="UHCCP internal chatbot interface">
+        <header class="app-header">
+            <h1 class="app-title">UHCCP Ask Isaac</h1>
+            <p class="app-subtitle">AI assistant for UHCCP DevOps knowledge and support</p>
+        </header>
+
+        <section class="chatbox" aria-label="Chat workspace">
+            <div id="conversation" class="message conversation" aria-live="polite"></div>
+            <form id="chat-form" class="chat-form" aria-label="Chat input form">
+                <label for="userInput" class="sr-only">Message</label>
+                <textarea id="userInput" class="chat-input" placeholder="Type a message..." rows="1" autofocus></textarea>
+                <button id="sendBtn" class="send-button" type="submit">Send</button>
+            </form>
+            <aside id="warning" class="warning" aria-label="AI reliability notice">
+                <p>Answers have been generated using an artificial intelligence (AI) interface. The AI output may not always be error-free and could include incomplete or inaccurate information.</p>
+            </aside>
+        </section>
+    </main>
+    <script src="/uhccp-internal-chatbot/static/scripts.js"></script>
+</body>
+</html>
