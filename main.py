@@ -1,36 +1,17 @@
-# main.py (entry point)
-from flask import Flask, render_template, jsonify, request
-from chatbot import chat_bp
-from document_processor import initialize_rag
-import os
+"""Application entry point for the UHCCP Internal Chatbot.
 
-app = Flask(__name__)
+Main responsibility:
+- Create the Flask application via the factory in app/ and expose it
+  as the ``app`` variable for gunicorn (``main:app``).
 
-# Initialize RAG system with sample document
-initialize_rag('data/document.md')
+Not handled here:
+- Route definitions (see app/routes.py).
+- Business logic (see app/chat/, app/tools/, app/ppt/, app/link_validator/).
+"""
 
-# Register blueprint for chat routes
-app.register_blueprint(chat_bp)
+from app import create_app
 
-@app.route('/data-files')
-def list_data_files():
-    """List all files in the data folder"""
-    data_folder = 'data'
-    files = os.listdir(data_folder)
-    return jsonify(files)
-
-@app.route('/exit', methods=['GET', 'POST'])
-def exit_page():
-    """Render the exit page and shut down the server"""
-    shutdown = request.environ.get('werkzeug.server.shutdown')
-    if shutdown:
-        shutdown()
-    return render_template('exit.html')
-
-@app.route('/')
-def home():
-    """Render the home page"""
-    return render_template('index.html')
+app = create_app()
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(host="0.0.0.0", port=7669)
